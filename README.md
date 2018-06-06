@@ -1,9 +1,8 @@
 # MS-Access-VBA
 
-
 With little change to the library setting (tools-> Reference) in the design view of the form) to select the outlook. This code will authomate Ms Access form to send out an email to an outlook user.
 -------------------------------------------------------------------------------------------------------------------------------------
-'To clear the textbox, Email, Subject and Body of the form. 
+To clear the textbox, Email, Subject and Body of the form: 
 Private Sub btnClear_Click()
     Me.txtEmail = Null
     Me.txtSubject = Null
@@ -32,7 +31,7 @@ Private Sub btnSend_Click()
     
 End Sub
 --------------------------------------------------------------------------------------------------------------------------------------
-'Close button fuction
+Close button fuction:
 
 Private Sub cmdCancel_Click()
     DoCmd.Close
