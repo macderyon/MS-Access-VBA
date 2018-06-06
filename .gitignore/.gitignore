@@ -1,7 +1,9 @@
-'To clear the textbox,Email, Subject and Body of the form. 
-
+With little chane to the library setting (tools) of MS Access, this code will authomate As Access form to send out an email to MS 
+outlook user.
+-------------------------------------------------------------------------------------------------------------------------------------
+'To clear the textbox, Email, Subject and Body of the form. 
 Private Sub btnClear_Click()
-    Me.txteEmail = Null
+    Me.txtEmail = Null
     Me.txtSubject = Null
     Me.txtBody = Null
 End Sub
