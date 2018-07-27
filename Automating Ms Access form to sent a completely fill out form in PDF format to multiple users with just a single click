@@ -1,0 +1,82 @@
+Option Compare Database
+Option Explicit
+Dim SENT As Boolean
+Dim AUTO As String
+~~~~~~~~~~Close the form~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Private Sub cmdClose_Click()
+'Close button fuction
+    DoCmd.Close
+End Sub
+
+Private Sub cmdEmail_Click()
+    On Error GoTo error_handler
+    Dim tblTimeStamp As Date
+    tblTimeStamp = Now
+    Dim oApp As New Outlook.Application
+    Dim oEmail As Outlook.MailItem
+    Set oEmail = oApp.CreateItem(olMailItem)
+    
+    oEmail.To = Me.txtTo
+    ~~~~~~~~~~Motor Change Form Submitted by clicking a button to send it as PDF format ~~~~~~~~~~~~~~~~~~ 
+    
+    DoCmd.SendObject acSendForm, "frmMotorChange", acFormatPDF, oEmail.To, , , "Motor Change Form Submitted on " & tblTimeStamp, "Please see the Motor Change Form Attached to this email.", False
+    MsgBox "Motor Change has been successfully submitted into the database.", vbOKOnly, "Change Submitted"
+  
+    With oEmail
+            .Send
+            MsgBox "Email Sent!"
+        
+    End With
+    Exit Sub
+error_handler:
+    MsgBox Err.Description & vbCrLf & "The email was not sent. Contact system administrator.", vbCritical, "Error Attempting To Email"
+    SENT = True
+End Sub
+
+Private Sub Detail_Click()
+
+End Sub
+
+Private Sub Form_Open(Cancel As Integer)
+    On Error GoTo error_handler
+    ~~~~~~~~~~Populating the lstEmail list box~~~~~~~~~
+    Dim cn As ADODB.Connection
+    Dim rs As New ADODB.Recordset
+    Set cn = CurrentProject.AccessConnection
+    Dim strSql As String
+     strSql = "SELECT distinct tbl_email.Email " _
+     & "FROM tbl_email " _
+     
+    With rs
+         Set .ActiveConnection = cn
+         .Source = strSql
+         .LockType = adLockReadOnly
+         .CursorType = adOpenKeyset
+         .Open
+    End With
+    
+    If Not (rs.BOF And rs.EOF) Then
+        rs.MoveFirst
+        Do While Not rs.EOF
+            lstEmail.AddItem rs("email")
+            rs.MoveNext
+        Loop
+    End If
+ 
+    'close
+    rs.Close
+    Set rs = Nothing
+     
+error_handler:
+   End Sub
+~~~~~~~Double Click Email Address To Add after the popup form Apears to add emails to the recipients~~~~~~~~
+Private Sub lstEmail_DblClick(Cancel As Integer)
+    Dim address As String
+    address = lstEmail
+    
+    If txtTo = "" Or IsNull(txtTo) Then
+        txtTo = address
+    Else
+        txtTo = txtTo & "; " & address
+    End If
+End Sub
